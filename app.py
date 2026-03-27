@@ -8,10 +8,11 @@ from functools import wraps
 import threading
 from flask_mail import Mail, Message
 from flask import request, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'alstom-moc-secret-key-2024'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///moc_database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:[YOUR-PASSWORD]@db.hqgosnkmtlpbxneegiph.supabase.co:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"connect_args": {"check_same_thread": False}}
 
