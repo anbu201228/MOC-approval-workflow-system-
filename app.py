@@ -11,7 +11,7 @@ from flask import request, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'alstom-moc-secret-key-2024'
+app.config['SECRET_KEY'] = 'e5cb0c0a17e3a30384a5506c302d85655c8c6e8304e5a4a4a5cbe9baecf5a3ba'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:[YOUR-PASSWORD]@db.hqgosnkmtlpbxneegiph.supabase.co:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"connect_args": {"check_same_thread": False}}
