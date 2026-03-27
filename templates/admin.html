@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - ALSTOM MOC{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>
+                    <i class="fas fa-user-shield"></i> Admin Panel
+                </h1>
+                <p>Manage Approvers and System Settings</p>
+            </div>
+            <div style="text-align: right;">
+                <div
+                    style="background: rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 6px; display: inline-block;">
+                    <div style="font-size: 14px;">Role: <strong>{{ user.role|title }}</strong></div>
+                    <div style="font-size: 12px;">ID: {{ user.employee_id }}</div>
+                </div>
+                <a href="{{ url_for('logout') }}" class="btn"
+                    style="margin-top: 10px; background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-tabs">
+        <a href="{{ url_for('dashboard') }}" class="nav-tab">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{{ url_for('admin_panel') }}" class="nav-tab active">
+            <i class="fas fa-user-shield"></i> Admin Panel
+        </a>
+        <a href="{{ url_for('list_moc') }}" class="nav-tab">
+            <i class="fas fa-list"></i> All MOCs
+        </a>
+        <a href="{{ url_for('workflow_status') }}" class="nav-tab">
+            <i class="fas fa-project-diagram"></i> Workflow
+        </a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; align-items: start;">
+        <!-- Add Approver Form -->
+        <div class="form-container">
+            <h2 style="color: var(--primary-blue); margin-bottom: 20px;">
+                <i class="fas fa-user-plus"></i> Add New Approver
+            </h2>
+            <form action="{{ url_for('admin_panel') }}" method="POST">
+                <div class="form-group">
+                    <label for="employee_id">Employee ID</label>
+                    <input type="text" id="employee_id" name="employee_id" required placeholder="e.g. ADM123">
+                </div>
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="john.doe@alstom.com">
+                </div>
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <input type="text" id="department" name="department" required
+                        placeholder="e.g. EHS, IT, Engineering">
+                </div>
+                <div class="form-group">
+                    <label for="position">Position</label>
+                    <input type="text" id="position" name="position" placeholder="Manager, Head, etc.">
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="jdoe">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label for="role">Approver Level / Role</label>
+                    <input type="text" id="role" name="role" required placeholder="e.g. approver1, admin">
+                    <small style="color: #666;">Standard roles: approver1 to approver6, admin</small>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+                    <i class="fas fa-plus"></i> Add Approver
+                </button>
+            </form>
+        </div>
+
+        <!-- Approver List -->
+        <div class="form-container">
+            <h2 style="color: var(--primary-blue); margin-bottom: 20px;">
+                <i class="fas fa-users"></i> Existing Approvers
+            </h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role / Level</th>
+                            <th>Department</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for approver in approvers %}
+                        <tr>
+                            <td>
+                                <strong>{{ approver.name }}</strong><br>
+                                <small style="color: #666;">ID: {{ approver.employee_id }}</small>
+                            </td>
+                            <td>
+                                <span class="status-badge" style="background: #e9ecef; color: #495057;">
+                                    {{ approver.role|title }}
+                                </span>
+                            </td>
+                            <td>{{ approver.department }}</td>
+                            <td>{{ approver.email }}</td>
+                            <td>
+                                {% if approver.is_active %}
+                                <span class="status-badge status-approved">Active</span>
+                                {% else %}
+                                <span class="status-badge status-rejected">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if approver.id != user.id %}
+                                <a href="javascript:void(0)"
+                                    onclick="confirmDeleteUser({{ approver.id }}, '{{ approver.name }}')"
+                                    class="btn btn-danger" style="padding: 5px 10px; font-size: 11px;">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDeleteUser(userId, userName) {
+        if (confirm('Are you sure you want to remove ' + userName + '? This might affect MOCs they are assigned to.')) {
+            window.location.href = '/admin/user/' + userId + '/delete';
+        }
+    }
+</script>
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Login - ALSTOM MOC{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: var(--primary-blue);">
+            <i class="fas fa-lock"></i> Login
+        </h1>
+        <p>Enter your credentials to access the MOC System</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <div class="form-group">
+            <label for="username">
+                <i class="fas fa-user"></i> Username
+            </label>
+            <input type="text" id="username" name="username" class="form-control" 
+                   placeholder="Enter username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">
+                <i class="fas fa-key"></i> Password
+            </label>
+            <input type="password" id="password" name="password" class="form-control" 
+                   placeholder="Enter password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <p>Don't have an account? 
+            <a href="{{ url_for('register') }}" style="color: var(--primary-blue);">
+                Register here
+            </a>
+        </p>
+        <p>
+            <a href="{{ url_for('index') }}" style="color: #666;">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </p>
+    </div>
+
+    <div style="background: #fff8e1; padding: 15px; border-radius: 6px; margin-top: 25px; border-left: 4px solid #ffc107;">
+        <h4 style="color: #856404; margin-bottom: 10px;">
+            <i class="fas fa-info-circle"></i> Quick Login
+        </h4>
+        <div style="font-size: 13px; color: #856404;">
+            <p><strong>Admin:</strong> admin / admin123</p>
+            <p><strong>Employee:</strong> employee / emp123</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - ALSTOM MOC System{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="header">
+        <h1><i class="fas fa-industry"></i> ALSTOM</h1>
+        <p>Process Change Management System</p>
+        <p style="font-size: 14px; margin-top: 5px;">EHS-FOR-007-MOC | Rev: 2 Date: 01-10-2023</p>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <h2>Welcome to MOC Workflow System</h2>
+        <p style="color: #666; margin: 20px 0;">Management of Change (MOC) approval workflow with 4-stage sequential approval</p>
+    </div>
+
+    <div style="margin: 30px 0;">
+        <a href="{{ url_for('login') }}" class="btn btn-primary" style="width: 100%; margin-bottom: 15px;">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{{ url_for('register') }}" class="btn" style="width: 100%; background: #f8f9fa; color: #333; border: 1px solid #ddd;">
+            <i class="fas fa-user-plus"></i> Register New Account
+        </a>
+    </div>
+
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px;">
+        <h3 style="color: var(--primary-blue); margin-bottom: 15px;">
+            <i class="fas fa-key"></i> Demo Credentials
+        </h3>
+        <div style="font-size: 14px; color: #666;">
+            <p><strong>Admin:</strong> admin / admin123</p>
+            <p><strong>EHS Manager (Approver 1):</strong> ehs / ehs123</p>
+            <p><strong>Engineering Head (Approver 2):</strong> engineer / eng123</p>
+            <p><strong>Quality Head (Approver 3):</strong> quality / qlt123</p>
+            <p><strong>Plant Manager (Approver 4):</strong> manager / mgr123</p>
+            <p><strong>Employee:</strong> employee / emp123</p>
+        </div>
+    </div>
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+        <p style="font-size: 12px; color: #999;">
+            4-Stage Sequential Approval Workflow<br>
+            • Step 1: Department Head (EHS)<br>
+            • Step 2: Engineering Manager<br>
+            • Step 3: Quality Manager<br>
+            • Step 4: Plant Manager
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,841 @@
+{% extends "base.html" %}
+
+{% block title %}New MOC - ALSTOM{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>
+            <i class="fas fa-file-alt"></i> New MOC Form
+        </h1>
+        <p>EHS-FOR-007-MOC | Rev: 2 Date: 01-10-2023</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-tabs">
+        <a href="{{ url_for('dashboard') }}" class="nav-tab">
+            <i class="fas fa-arrow-left"></i> Dashboard
+        </a>
+        <a href="{{ url_for('new_moc') }}" class="nav-tab active">
+            <i class="fas fa-plus-circle"></i> New MOC
+        </a>
+        <a href="{{ url_for('list_moc') }}" class="nav-tab">
+            <i class="fas fa-list"></i> My MOCs
+        </a>
+    </div>
+
+    <form method="POST" action="{{ url_for('new_moc') }}" class="form-container">
+        <!-- Form Header -->
+        <div class="moc-form-section">
+            <h2><i class="fas fa-clipboard-check"></i> EHS REVIEW - MANAGEMENT OF CHANGE</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" name="title" class="form-control" 
+                           value="Window installation - Manual Lifting" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date">Date *</label>
+                    <input type="date" id="date" name="date" class="form-control" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Characteristics -->
+        <div class="moc-form-section">
+            <h3><i class="fas fa-exchange-alt"></i> Change Characteristics</h3>
+            
+            <div class="form-group">
+                <label>Change Category *</label>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="change_category" value="Process & Methods Change" checked>
+                        Process & Methods Change / Modification
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="change_category" value="Layout Change">
+                        Layout Change / Modification
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="change_category" value="Equipment Change">
+                        Equipment Change / Modification
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="change_category" value="Infrastructure Change">
+                        Infrastructure change / Modification
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="change_category" value="Raw Material">
+                        Change of Raw Material
+                    </label>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div class="form-group">
+                    <label>Change Type *</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="radio" name="change_type" value="Permanent">
+                            Permanent
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="radio" name="change_type" value="Temporary" checked>
+                            Temporary
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="radio" name="change_type" value="Emergency">
+                            Emergency
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Change Impact *</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" name="change_impact" value="Safety" checked>
+                            Safety
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" name="change_impact" value="Health">
+                            Health
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" name="change_impact" value="Environment">
+                            Environment
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Check Points (22 Questions from Excel) -->
+        <div class="moc-form-section">
+            <h3><i class="fas fa-check-square"></i> Check Points</h3>
+            <p style="color: #666; margin-bottom: 20px;">Answer all 22 questions as per the MOC form</p>
+            
+            <!-- Question 1 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    1. Is the original design intent being changed?
+                </div>
+                <input type="hidden" name="checkpoint_1_question" value="Is the original design intent being changed?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_1_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_1_answer" value="No" checked>
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_1_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_1_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    2. Has there been any change to materials of construction?
+                </div>
+                <input type="hidden" name="checkpoint_2_question" value="Has there been any change to materials of construction?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_2_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_2_answer" value="No" checked>
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_2_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_2_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Add more questions here... (I'll show first 2 as example) -->
+             <!-- Question 3 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    3. Could this change hinder access to other equipment?
+                </div>
+                <input type="hidden" name="checkpoint_2_question" value="Could this change hinder access to other equipment?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_3_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_3_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_3_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_3_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    4. Has this design been previously changed?
+                </div>
+                <input type="hidden" name="checkpoint_4_question" value="Has this design been previously changed?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_4_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_4_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_4_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_4_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    5. Could this change impact the supply or consumption of utilities?
+                </div>
+                <input type="hidden" name="checkpoint_5_question" value="Could this change impact the supply or consumption of utilities?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_5_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_5_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_5_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_5_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    6. Could this change create any new hazards during installation / construction or in later service?
+                </div>
+                <input type="hidden" name="checkpoint_6_question" value="Could this change create any new hazards during installation / construction or in later service?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_6_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_6_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_6_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_6_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    7. Is there any change to procedures or operating conditions?
+                </div>
+                <input type="hidden" name="Is there any change to procedures or operating conditions?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_7_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_7_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_7_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_7_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    8. Are there any upstream or downstream effects as a result of the change?
+                </div>
+                <input type="hidden" name="checkpoint_8_question" value="Are there any upstream or downstream effects as a result of the change?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_8_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_8_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_8_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_8_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    9. Is additional protection required as a result of this change?
+                </div>
+                <input type="hidden" name="checkpoint_9_question" value="Is additional protection required as a result of this change?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_9_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_9_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_9_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_2_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 10-->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                   10. Are there any legal requirements involved for this change?(Layout change, Environment Consent change, Additional waste generation)
+                </div>
+                <input type="hidden" name="checkpoint_10_question" value="Are there any legal requirements involved for this change?(Layout change, Environment Consent change, Additional waste generation)">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_10_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_10_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_10_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_10_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 11 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    11. Is there any impact on existing safety equipment (Trips, alarms etc.)?
+                </div>
+                <input type="hidden" name="checkpoint_11_question" value="Is there any impact on existing safety equipment (Trips, alarms etc.)?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_11_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_11_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_11_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_11_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 12 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    12. Is there any impact on fire protection / preventive facilities?
+                </div>
+                <input type="hidden" name="checkpoint_12_question" value="	Is there any impact on fire protection / preventive facilities?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_12_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_12_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_12_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_12_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 13 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    13. Will the performance characteristics of the equipment, facility or system be altered?
+                </div>
+                <input type="hidden" name="checkpoint_13_question" value="Will the performance characteristics of the equipment, facility or system be altered?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_13_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_13_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_13_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_13_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 14 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    Are there any changes required to training or procedures as a result of this change?
+                </div>
+                <input type="hidden" name="checkpoint_14_question" value="Are there any changes required to training or procedures as a result of this change?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_14_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_14_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_14_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_14_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 15 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    15. Is there any increase in hazardous or flammable material inventory?
+                </div>
+                <input type="hidden" name="checkpoint_2_question" value="Is there any increase in hazardous or flammable material inventory?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_15_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_15_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_15_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_15_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 16 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    16. Will the change cause or increase housekeeping concern?
+                </div>
+                <input type="hidden" name="checkpoint_16_question" value="Will the change cause or increase housekeeping concern?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_16_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_16_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_16_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_16_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+            <!-- Question 17 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    17. Will this change increase or cause consumption of resources including natural resources?
+                </div>
+                <input type="hidden" name="checkpoint_17_question" value="Will this change increase or cause consumption of resources including natural resources?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_17_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_17_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_17_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_17_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 18 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    18. Will this change increase or cause wastage of any resources including natural resources?
+                </div>
+                <input type="hidden" name="checkpoint_18_question" value="Will this change increase or cause wastage of any resources including natural resources?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_18_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_18_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_18_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_18_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 19 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    19. Will the change increase the existing risk or create new risk to occupational health (acute or chronic)?
+                </div>
+                <input type="hidden" name="checkpoint_19_question" value="Will the change increase the existing risk or create new risk to occupational health (acute or chronic)?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_19_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_19_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_19_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_19_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 20 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    20. Will the change cause risk of damage of any equipment / property (during erection/operation)?
+                </div>
+                <input type="hidden" name="checkpoint_20_question" value="Will the change cause risk of damage of any equipment / property (during erection/operation)?">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_20_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_20_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_20_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_20_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 21 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    21. Impact on waste generation and recycling as well as end-of-life management is part of the specifications and selection
+                </div>
+                <input type="hidden" name="checkpoint_21_question" value="Impact on waste generation and recycling as well as end-of-life management is part of the specifications and selection">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_21_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_21_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_21_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_21_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+
+            <!-- Question 22 -->
+            <div class="checkpoint-item">
+                <div class="checkpoint-question">
+                    22. 	Will the change cause any Ergonomical issues / impact (Man/Machine/Material)
+                </div>
+                <input type="hidden" name="checkpoint_22_question" value="Will the change cause any Ergonomical issues / impact (Man/Machine/Material)">
+                
+                <div class="checkpoint-options">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_22_answer" value="Yes">
+                        Yes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_22_answer" value="No">
+                        No
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" name="checkpoint_22_answer" value="NA">
+                        N/A
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Remarks (if any)</label>
+                    <input type="text" name="checkpoint_22_remarks" class="form-control" placeholder="Enter remarks if needed">
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews and References -->
+        <div class="moc-form-section">
+            <h3><i class="fas fa-clipboard-list"></i> Reviews and References</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div class="form-group">
+                    <label>HIRA Review Required?</label>
+                    <div style="display: flex; gap: 20px;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="hira_review" value="yes">
+                            Yes
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="hira_review" value="no" checked>
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Aspect Impact Review Required?</label>
+                    <div style="display: flex; gap: 20px;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="aspect_impact_review" value="yes">
+                            Yes
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="aspect_impact_review" value="no" checked>
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label for="dap_ref_no">DAP Reference No.</label>
+                    <input type="text" id="dap_ref_no" name="dap_ref_no" class="form-control" 
+                           placeholder="Enter DAP reference number">
+                </div>
+
+                <div class="form-group">
+                    <label for="dvr_ref_no">DVR Reference No.</label>
+                    <input type="text" id="dvr_ref_no" name="dvr_ref_no" class="form-control" 
+                           placeholder="Enter DVR reference number">
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="moc-form-section">
+            <h3><i class="fas fa-comment-alt"></i> Additional Information</h3>
+            
+            <div class="form-group">
+                <label for="control_measures">Control Measures</label>
+                <textarea id="control_measures" name="control_measures" class="form-control" rows="3">                </textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="additional_comments">Additional Comments</label>
+                <textarea id="additional_comments" name="additional_comments" class="form-control" rows="6">
+1 Window lifting jig clearance stopped due to window breakage incident
+2 Manual lifting until root cause and actions aligned with CFT
+3 Gloves, Safety goggles to be mandatory for manual lifting
+4 Foam to be kept on platform as required to avoid accidental breakage of window - temporary
+                </textarea>
+            </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div style="display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+            <a href="{{ url_for('dashboard') }}" class="btn" style="background: #f8f9fa; color: #333;">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save as Draft
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Add your JavaScript at the end -->
+<script>
+    // Set today's date automatically
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('date');
+        if (dateInput) {
+            dateInput.value = today;
+        }
+        
+        // Pre-check Excel default values
+        document.querySelector('input[value="Temporary"]').checked = true;
+        document.querySelector('input[value="Process & Methods Change"]').checked = true;
+        document.querySelector('input[value="Safety"]').checked = true;
+        
+        // Set all checkpoints to "No" as per Excel
+        document.querySelectorAll('input[value="No"]').forEach(radio => {
+            radio.checked = true;
+        });
+    });
+</script>
+{% endblock %}

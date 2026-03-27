@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}MOC List - ALSTOM PCM{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <header class="app-header">
+        <div class="header-top">
+            <div class="header-title">
+                <h1>MOC Request List</h1>
+                <p>Manage Process Change Requests</p>
+            </div>
+            
+            <div class="user-profile">
+                <div class="welcome-message">
+                    Welcome, <strong>{{ user.name }}</strong>
+                </div>
+                <div class="user-details">
+                    {{ user.department }} | {{ user.role|title }}
+                </div>
+                <a href="{{ url_for('dashboard') }}" class="logout-btn">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </a>
+            </div>
+        </div>
+        
+        <nav class="app-nav">
+            <div class="nav-tabs">
+                <a href="{{ url_for('dashboard') }}" class="nav-tab">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="{{ url_for('new_request') }}" class="nav-tab">
+                    <i class="fas fa-plus-circle"></i> New MOC
+                </a>
+                <a href="{{ url_for('list_requests') }}" class="nav-tab active">
+                    <i class="fas fa-list"></i> MOC List
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="app-content">
+        <div class="table-header">
+            <h2><i class="fas fa-table"></i> Process Change Requests</h2>
+            <a href="{{ url_for('new_request') }}" class="btn-primary">
+                <i class="fas fa-plus"></i> New Request
+            </a>
+        </div>
+        
+        {% if pcr_list %}
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>MOC Number</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pcr in pcr_list %}
+                    <tr>
+                        <td>{{ pcr.moc_number }}</td>
+                        <td>{{ pcr.title }}</td>
+                        <td>{{ pcr.description[:100] }}{% if pcr.description|length > 100 %}...{% endif %}</td>
+                        <td>
+                            <span class="status-badge status-{{ pcr.status|lower }}">
+                                {{ pcr.status }}
+                            </span>
+                        </td>
+                        <td>{{ pcr.created_at.strftime('%Y

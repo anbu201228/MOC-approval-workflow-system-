@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}My MOCs - ALSTOM{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>
+                    <i class="fas fa-list"></i> My MOC Requests
+                </h1>
+                <p>View and manage your Management of Change requests</p>
+            </div>
+            <div>
+                <a href="{{ url_for('new_moc') }}" class="btn" style="background: white; color: var(--primary-blue);">
+                    <i class="fas fa-plus"></i> New MOC
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-tabs">
+        <a href="{{ url_for('dashboard') }}" class="nav-tab">
+            <i class="fas fa-arrow-left"></i> Dashboard
+        </a>
+        <a href="{{ url_for('new_moc') }}" class="nav-tab">
+            <i class="fas fa-plus-circle"></i> New MOC
+        </a>
+        <a href="{{ url_for('list_moc') }}" class="nav-tab active">
+            <i class="fas fa-list"></i> My MOCs
+        </a>
+        <a href="{{ url_for('workflow_status') }}" class="nav-tab">
+            <i class="fas fa-project-diagram"></i> Workflow
+        </a>
+        {% if user.role == 'admin' %}
+        <a href="{{ url_for('admin_panel') }}" class="nav-tab">
+            <i class="fas fa-user-shield"></i> Admin Panel
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- MOC List Table -->
+    <div class="form-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="color: var(--primary-blue);">
+                <i class="fas fa-file-alt"></i> MOC List ({{ mocs|length }})
+            </h2>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.print()" class="btn" style="background: var(--primary-light);">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button onclick="exportToExcel()" class="btn" style="background: var(--primary-light);">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+
+        {% if mocs %}
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>MOC Number</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Current Step</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for moc in mocs %}
+                    <tr>
+                        <td><strong>{{ moc.moc_number }}</strong></td>
+                        <td>{{ moc.title }}</td>
+                        <td>{{ moc.date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% if moc.status == 'Draft' %}
+                            <span class="status-badge status-draft">{{ moc.status }}</span>
+                            {% elif moc.status == 'Submitted' %}
+                            <span class="status-badge status-submitted">{{ moc.status }}</span>
+                            {% elif moc.status == 'Approved' %}
+                            <span class="status-badge status-approved">{{ moc.status }}</span>
+                            {% elif moc.status == 'Rejected' %}
+                            <span class="status-badge status-rejected">{{ moc.status }}</span>
+                            {% else %}
+                            <span class="status-badge">{{ moc.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if moc.status == 'Submitted' %}
+                            <span class="status-badge status-pending">
+                                Step {{ moc.current_step }} of 6
+                            </span>
+                            {% elif moc.status == 'Draft' %}
+                            <span style="color: #6c757d;">Not Submitted</span>
+                            {% else %}
+                            <span>{{ moc.current_step }} / 6</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 5px;">
+                                <a href="{{ url_for('view_moc', moc_id=moc.id) }}" class="btn"
+                                    style="padding: 6px 10px; font-size: 12px; background: var(--primary-light);">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+
+                                {% if moc.status == 'Draft' %}
+                                <a href="{{ url_for('submit_moc', moc_id=moc.id) }}" class="btn btn-success"
+                                    style="padding: 6px 10px; font-size: 12px;">
+                                    <i class="fas fa-paper-plane"></i>
+                                </a>
+                                {% endif %}
+
+                                {% if user.role == 'admin' or moc.submitted_by == user.id %}
+                                <a href="#" onclick="confirmDelete({{ moc.id }})" class="btn btn-danger"
+                                    style="padding: 6px 10px; font-size: 12px;">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Workflow Steps Legend -->
+        <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+            <h4 style="color: var(--primary-blue); margin-bottom: 10px;">
+                <i class="fas fa-info-circle"></i> Workflow Steps Legend
+            </h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div>
+                    <strong>Step 1:</strong> Department Head (EHS)
+                </div>
+                <div>
+                    <strong>Step 2:</strong> Engineering Manager
+                </div>
+                <div>
+                    <strong>Step 3:</strong> Quality Manager
+                </div>
+                <div>
+                    <strong>Step 4:</strong> Plant Manager
+                </div>
+                <div>
+                    <strong>Step 5:</strong> Finance Review
+                </div>
+                <div>
+                    <strong>Step 6:</strong> Operations Review
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div style="text-align: center; padding: 50px 20px;">
+            <i class="fas fa-folder-open" style="font-size: 60px; color: #ddd; margin-bottom: 20px;"></i>
+            <h3 style="color: #666; margin-bottom: 10px;">No MOC Requests Found</h3>
+            <p style="color: #999;">You haven't created any MOC requests yet.</p>
+            <a href="{{ url_for('new_moc') }}" class="btn btn-primary" style="margin-top: 20px;">
+                <i class="fas fa-plus"></i> Create Your First MOC
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function confirmDelete(mocId) {
+        if (confirm('Are you sure you want to delete this MOC? This action cannot be undone.')) {
+            window.location.href = '/moc/' + mocId + '/delete';
+        }
+    }
+
+    function exportToExcel() {
+        alert('Export feature will be available soon!');
+    }
+</script>
+{% endblock %}

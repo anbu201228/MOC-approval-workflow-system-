@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+
+{% block title %}View MOC - {{ moc.moc_number }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+                <h1>
+                    <i class="fas fa-file-alt"></i> {{ moc.moc_number }}
+                </h1>
+                <p>
+                    {{ moc.title }} |
+                    Created:
+                    {{ moc.created_at.strftime('%Y-%m-%d %H:%M') if moc.created_at else 'N/A' }}
+                </p>
+
+            </div>
+            <div style="text-align: right;">
+                <div
+                    style="background: rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 6px; margin-bottom: 10px;">
+                    <div style="font-size: 14px;">
+                        Status:
+                        {% if moc.status == 'Draft' %}
+                        <span class="status-badge status-draft">{{ moc.status }}</span>
+                        {% elif moc.status == 'Submitted' %}
+                        <span class="status-badge status-submitted">{{ moc.status }}</span>
+                        {% elif moc.status == 'Approved' %}
+                        <span class="status-badge status-approved">{{ moc.status }}</span>
+                        {% elif moc.status == 'Rejected' %}
+                        <span class="status-badge status-rejected">{{ moc.status }}</span>
+                        {% endif %}
+                    </div>
+                    {% if moc.status == 'Submitted' %}
+                    <div style="font-size: 12px; margin-top: 5px;">
+                        Current Step: {{ moc.current_step }} of 6
+                    </div>
+                    {% endif %}
+                </div>
+                <a href="{{ url_for('list_moc') }}" class="btn"
+                    style="background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-tabs">
+        <a href="{{ url_for('dashboard') }}" class="nav-tab">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{{ url_for('list_moc') }}" class="nav-tab">
+            <i class="fas fa-list"></i> My MOCs
+        </a>
+        <a href="{{ url_for('view_moc', moc_id=moc.id) }}" class="nav-tab active">
+            <i class="fas fa-eye"></i> View MOC
+        </a>
+
+        {% if (moc.submitted_by == user.id and moc.status == 'Draft') or user.role == 'admin' %}
+        <a href="{{ url_for('submit_moc', moc_id=moc.id) }}" class="nav-tab"
+            style="background: var(--secondary-green); color: white;">
+            <i class="fas fa-paper-plane"></i> Submit for Approval
+        </a>
+        {% endif %}
+
+        <!-- In view_moc.html, add timeout/escalation badges -->
+        {% if moc.status == 'Submitted' %}
+        <span class="badge bg-info">
+            Step {{ moc.current_step }}: Pending
+            ({{ hours_pending }} hrs)
+        </span>
+        {% endif %}
+
+
+
+        {% if user.role.startswith('approver') and moc.status == 'Submitted' %}
+        {% if (user.id == moc.approver1_id and moc.approver1_status == 'Pending') or
+        (user.id == moc.approver2_id and moc.approver2_status == 'Pending') or
+        (user.id == moc.approver3_id and moc.approver3_status == 'Pending') or
+        (user.id == moc.approver4_id and moc.approver4_status == 'Pending') or
+        (user.id == moc.approver5_id and moc.approver5_status == 'Pending') or
+        (user.id == moc.approver6_id and moc.approver6_status == 'Pending') %}
+        <a href="{{ url_for('approve_moc', moc_id=moc.id) }}" class="nav-tab"
+            style="background: var(--primary-blue); color: white;">
+            <i class="fas fa-check-circle"></i> Review & Approve
+        </a>
+        {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Workflow Status -->
+    <div class="form-container">
+        <h2 style="color: var(--primary-blue); margin-bottom: 20px;">
+            <i class="fas fa-project-diagram"></i> 6-Stage Approval Workflow
+        </h2>
+
+        <div class="workflow-steps">
+            <!-- Step 1 -->
+            <div class="workflow-step">
+                <div
+                    class="step-circle {% if moc.approver1_status == 'Approved' %}completed{% elif moc.current_step >= 1 %}active{% endif %}">
+                    1
+                </div>
+                <div class="step-label">EHS Manager</div>
+                <div style="font-size: 12px; margin-top: 5px;">
+                    {% if moc.approver1 %}
+                    {{ moc.approver1.name }}
+                    {% else %}
+                    Not Assigned
+                    {% endif %}
+                </div>
+                <div style="font-size: 11px; color: #666; margin-top: 3px;">
+                    {% if moc.approver1_status == 'Approved' %}
+                    Approved<br>{{ moc.approver1_date.strftime('%Y-%m-%d') if moc.approver1_date }}
+                    {% elif moc.approver1_status == 'Rejected' %}
+                    Rejected
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="workflow-step">
+                <div
+                    class="step-circle {% if moc.approver2_status == 'Approved' %}completed{% elif moc.current_step >= 2 %}active{% endif %}">
+                    2
+                </div>
+                <div class="step-label">Engineering</div>
+                <div style="font-size: 12px; margin-top: 5px;">
+                    {% if moc.approver2 %}
+                    {{ moc.approver2.name }}
+                    {% else %}
+                    Not Assigned
+                    {% endif %}
+                </div>
+                <div style="font-size: 11px; color: #666; margin-top: 3px;">
+                    {% if moc.approver2_status == 'Approved' %}
+                    Approved<br>{{ moc.approver2_date.strftime('%Y-%m-%d') if moc.approver2_date }}
+                    {% elif moc.approver2_status == 'Rejected' %}
+                    Rejected
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="workflow-step">
+                <div
+                    class="step-circle {% if moc.approver3_status == 'Approved' %}completed{% elif moc.current_step >= 3 %}active{% endif %}">
+                    3
+                </div>
+                <div class="step-label">Quality</div>
+                <div style="font-size: 12px; margin-top: 5px;">
+                    {% if moc.approver3 %}
+                    {{ moc.approver3.name }}
+                    {% else %}
+                    Not Assigned
+                    {% endif %}
+                </div>
+                <div style="font-size: 11px; color: #666; margin-top: 3px;">
+                    {% if moc.approver3_status == 'Approved' %}
+                    Approved<br>{{ moc.approver3_date.strftime('%Y-%m-%d') if moc.approver3_date }}
+                    {% elif moc.approver3_status == 'Rejected' %}
+                    Rejected
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="workflow-step">
+                <div
+                    class="step-circle {% if moc.approver4_status == 'Approved' %}completed{% elif moc.current_step >= 4 %}active{% endif %}">
+                    4
+                </div>
+                <div class="step-label">Plant Manager</div>
+                <div style="font-size: 12px; margin-top: 5px;">
+                    {% if moc.approver4 %}
+                    {{ moc.approver4.name }}
+                    {% else %}
+                    Not Assigned
+                    {% endif %}
+                </div>
+                <div style="font-size: 11px; color: #666; margin-top: 3px;">
+                    {% if moc.approver4_status == 'Approved' %}
+                    Approved<br>{{ moc.approver4_date.strftime('%Y-%m-%d') if moc.approver4_date }}
+                    {% elif moc.approver4_status == 'Rejected' %}
+                    Rejected
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="workflow-step">
+                <div
+                    class="step-circle {% if moc.approver5_status == 'Approved' %}completed{% elif moc.current_step >= 5 %}active{% endif %}">
+                    5
+                </div>
+                <div class="step-label">Finance</div>
+                <div style="font-size: 12px; margin-top: 5px;">
+                    {% if moc.approver5 %}
+                    {{ moc.approver5.name }}
+                    {% else %}
+                    Not Assigned
+                    {% endif %}
+                </div>
+                <div style="font-size: 11px; color: #666; margin-top: 3px;">
+                    {% if moc.approver5_status == 'Approved' %}
+                    Approved<br>{{ moc.approver5_date.strftime('%Y-%m-%d') if moc.approver5_date }}
+                    {% elif moc.approver5_status == 'Rejected' %}
+                    Rejected
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="workflow-step">
+                <div
+                    class="step-circle {% if moc.approver6_status == 'Approved' %}completed{% elif moc.current_step >= 6 %}active{% endif %}">
+                    6
+                </div>
+                <div class="step-label">Operations</div>
+                <div style="font-size: 12px; margin-top: 5px;">
+                    {% if moc.approver6 %}
+                    {{ moc.approver6.name }}
+                    {% else %}
+                    Not Assigned
+                    {% endif %}
+                </div>
+                <div style="font-size: 11px; color: #666; margin-top: 3px;">
+                    {% if moc.approver6_status == 'Approved' %}
+                    Approved<br>{{ moc.approver6_date.strftime('%Y-%m-%d') if moc.approver6_date }}
+                    {% elif moc.approver6_status == 'Rejected' %}
+                    Rejected
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Approval History -->
+        {% if history %}
+        <div style="margin-top: 30px;">
+            <h3 style="color: var(--primary-blue); margin-bottom: 15px;">
+                <i class="fas fa-history"></i> Approval History
+            </h3>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
+                {% for entry in history %}
+                <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee;">
+                    <div style="width: 40px; height: 40px; background: var(--primary-blue); color: white; 
+                                border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+                                margin-right: 15px; font-size: 14px;">
+                        {{ entry.step if entry.step > 0 else 'S' }}
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 500;">
+                            {{ entry.user.name }}
+                            <span
+                                style="color: {% if entry.action == 'Approved' %}var(--secondary-green){% elif entry.action == 'Rejected' %}var(--secondary-red){% else %}var(--primary-blue){% endif %};">
+                                {{ entry.action }}
+                            </span>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            {{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}
+                            {% if entry.comments %}
+                            | {{ entry.comments }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- MOC Details -->
+    <div class="form-container">
+        <h2 style="color: var(--primary-blue); margin-bottom: 20px;">
+            <i class="fas fa-info-circle"></i> MOC Details
+        </h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div>
+                <h3 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 16px;">
+                    Basic Information
+                </h3>
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 500; width: 40%;">Title:</td>
+                        <td style="padding: 8px 0;">{{ moc.title }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 500;">Date:</td>
+                        <td style="padding: 8px 0;">{{ moc.date.strftime('%Y-%m-%d') if moc.date else 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 500;">Submitted By:</td>
+                        <td style="padding: 8px 0;">{{ moc.submitter.name if moc.submitter else 'Unknown User' }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 500;">Department:</td>
+                        <td style="padding: 8px 0;">{{ moc.submitter.department }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div>
+                <h3 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 16px;">
+                    Change Characteristics
+                </h3>
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 500; width: 40%;">Change Category:</td>
+                        <td style="padding: 8px 0;">{{ moc.change_category }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 500;">Change Type:</td>
+                        <td style="padding: 8px 0;">{{ moc.change_type }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; font-weight: 500;">Change Impact:</td>
+                        <td style="padding: 8px 0;">{{ moc.change_impact }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Check Points Summary -->
+        {% if checkpoints_data %}
+        <div style="margin-top: 30px;">
+            <h3 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 16px;">
+                Check Points Summary
+            </h3>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; max-height: 300px; overflow-y: auto;">
+                {% for i, checkpoint in checkpoints_data.items() %}
+                <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                    <div style="font-weight: 500; margin-bottom: 5px;">
+                        {{ i }}. {{ checkpoint.question }}
+                    </div>
+                    <div style="display: flex; gap: 20px; font-size: 14px;">
+                        <span>Answer: <strong>{{ checkpoint.answer }}</strong></span>
+                        {% if checkpoint.remarks %}
+                        <span>Remarks: {{ checkpoint.remarks }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Additional Information -->
+        <div style="margin-top: 30px;">
+            <h3 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 16px;">
+                Additional Information
+            </h3>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
+                {% if moc.additional_comments %}
+                <div style="margin-bottom: 15px;">
+                    <div style="font-weight: 500; margin-bottom: 5px;">Additional Comments:</div>
+                    <div style="white-space: pre-line;">{{ moc.additional_comments }}</div>
+                </div>
+                {% endif %}
+
+                {% if moc.control_measures %}
+                <div>
+                    <div style="font-weight: 500; margin-bottom: 5px;">Control Measures:</div>
+                    <div>{{ moc.control_measures }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <div>
+            {% if moc.status == 'Draft' and (moc.submitted_by == user.id or user.role == 'admin') %}
+            <a href="{{ url_for('submit_moc', moc_id=moc.id) }}" class="btn btn-success">
+                <i class="fas fa-paper-plane"></i> Submit for Approval
+            </a>
+            {% endif %}
+
+            <a href="{{ url_for('list_moc') }}" class="btn" style="background: #f8f9fa; margin-left: 10px;">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+
+        <div>
+            <button onclick="window.print()" class="btn" style="background: var(--primary-light);">
+                <i class="fas fa-print"></i> Print
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
