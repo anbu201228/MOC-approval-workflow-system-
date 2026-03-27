@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone, timedelta  # Add timezone
 import os
 import json
+import secrets
+print(secrets.token_hex(32))
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import threading
