@@ -124,7 +124,9 @@ class ApprovalHistory(db.Model):
     
     moc = db.relationship('MOC', backref='history')
     user = db.relationship('User')
-
+    
+with app.app_context():
+    db.create_all()
 # ========== HELPER FUNCTIONS ==========
 
 def login_required(f):
