@@ -14,7 +14,13 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'alstom-moc-secret-key-2024'
-app.config['SQLALCHEMY_DATABASE_URI'] = "SQLALCHEMY_DATABASE_URI = "postgresql://postgres:Anbu@2803200@db.hqgosnkmtlpbxneegiph.supabase.co:5432/postgres"E"
+
+# Use environment variable (recommended)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://postgres:Anbu%402803200@db.hqgosnkmtlpbxneegiph.supabase.co:5432/postgres"
+)
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"connect_args": {"check_same_thread": True}}
 
