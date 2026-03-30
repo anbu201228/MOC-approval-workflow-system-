@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'alstom-moc-secret-key-2024'
 
 app.config['SECRET_KEY'] = 'alstom-moc-secret-key-2024'
-app.config['SQLALCHEMY_DATABASE_URI']="postgresql://postgres:Anbu%402803200@db.hqgosnkmtlpbxneegiph.supabase.co:5432/postgres"
+app.config['SQLALCHEMY_DATABASE_URI']="postgresql://postgres:RjzD12hAvr5KJc7e@db.hqgosnkmtlpbxneegiph.supabase.co:5432/postgres"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
