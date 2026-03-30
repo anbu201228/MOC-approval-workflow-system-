@@ -12,12 +12,15 @@ from flask_mail import Mail, Message
 from flask import request, render_template
 from flask_sqlalchemy import SQLAlchemy
 
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'alstom-moc-secret-key-2024'
 
 app.config['SECRET_KEY'] = 'alstom-moc-secret-key-2024'
-app.config['SQLALCHEMY_DATABASE_URI']="postgresql://postgres:RjzD12hAvr5KJc7e@db.hqgosnkmtlpbxneegiph.supabase.co:5432/postgres"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres.hqgosnkmtlpbxneegiph:RjzD12hAvr5KJc7e@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 # Email Configuration - REPLACE WITH YOUR DETAILS
