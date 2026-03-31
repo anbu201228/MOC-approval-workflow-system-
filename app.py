@@ -17,9 +17,17 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'alstom-moc-secret-key-2024'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres.hqgosnkmtlpbxneegiph:RjzD12hAvr5KJc7e@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"
-
+# Database URL (use DATABASE_URL environment variable for production)
+# Example Postgres URL (password must be URL-encoded):
+# postgresql://username:pass%40word@host:port/dbname
+default_db_uri = 'sqlite:///app.db?check_same_thread=False'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', default_db_uri)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Postgres users can provide DATABASE_URL; SQLite will use check_same_thread=False.
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
+
+# install psycopg2-binary if using postgres: pip install psycopg2-binary
 
 db = SQLAlchemy(app)
 
@@ -1078,6 +1086,9 @@ if __name__ == '__main__':
     print("=" * 60)
     
     # Start escalation service only when running app directly
-    start_escalation_service()
+    if not app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite:'):
+        start_escalation_service()
+    else:
+        print('Auto-escalation service disabled for SQLite mode (thread-safety issue).')
     
     app.run(debug=True, port=5000)
